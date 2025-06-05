@@ -1,13 +1,14 @@
-providers = ["python"]
-
-[phases.install]
-cmds = [
-  'python --version',
-  'python -m ensurepip --upgrade',
-  'python -m pip install --break-system-packages -r requirements.txt'
+[phases.setup]
+nixPkgs = [
+  'python311',
+  'python311Packages.flask',
+  'python311Packages.flask-cors',
+  'python311Packages.gunicorn',
+  'python311Packages.bcrypt',
+  'python311Packages.pydantic',
+  'python311Packages.requests',
+  'python311Packages.python-dotenv'
 ]
 
 [start]
-cmd = "python -m gunicorn --bind 0.0.0.0:$PORT --timeout 120 src.main:app"
-
-
+cmd = "gunicorn --bind 0.0.0.0:$PORT --timeout 120 src.main:app"
