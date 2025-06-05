@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inv_TimeSheetMgmt API</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 5px solid #007bff;
+        }
+        h1 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        h2 {
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            color: #0056b3;
+        }
+        h3 {
+            color: #004085;
+            margin-top: 25px;
+        }
+        .endpoint {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 3px solid #28a745;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background-color: #d1ecf1; color: #0c5460; }
+        .post { background-color: #d4edda; color: #155724; }
+        .put { background-color: #fff3cd; color: #856404; }
+        .delete { background-color: #f8d7da; color: #721c24; }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .description {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inv_TimeSheetMgmt API</h1>
+        <p>RESTful API for managing timesheets, users, campaigns, and schedules for BPO operations.</p>
+    </header>
+
+    <section>
+        <h2>Overview</h2>
+        <p>This API provides endpoints for managing a BPO timesheet system with the following features:</p>
+        <ul>
+            <li>User authentication and role-based access control</li>
+            <li>Campaign and schedule management</li>
+            <li>Timesheet entry, submission, and approval workflow</li>
+            <li>Reporting and analytics</li>
+            <li>Email notifications via Supabase SMTP</li>
+        </ul>
+        <p>All endpoints require authentication via JWT token except for the login endpoint.</p>
+    </section>
+
+    <section>
+        <h2>Authentication</h2>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/auth/login</code>
+            <div class="description">Authenticate a user and get a JWT token</div>
+            <pre><code>{
+  "email": "user@example.com",
+  "password": "password123"
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/auth/logout</code>
+            <div class="description">Log out the current user</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/auth/me</code>
+            <div class="description">Get the current user's information</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/auth/reset-password</code>
+            <div class="description">Request a password reset</div>
+            <pre><code>{
+  "email": "user@example.com"
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/auth/change-password</code>
+            <div class="description">Change user password</div>
+            <pre><code>{
+  "current_password": "current123",
+  "new_password": "new123"
+}</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Users</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/users</code>
+            <div class="description">Get users based on role permissions</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/users/{user_id}</code>
+            <div class="description">Get a specific user</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/users</code>
+            <div class="description">Create a new user (admin only)</div>
+            <pre><code>{
+  "email": "user@example.com",
+  "password": "password123",
+  "full_name": "John Doe",
+  "role": "team_member",
+  "pay_rate_per_hour": 18.50,
+  "campaign_id": "550e8400-e29b-41d4-a716-446655440001",
+  "send_welcome_email": true
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/users/{user_id}</code>
+            <div class="description">Update a user</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <code>/api/users/{user_id}</code>
+            <div class="description">Delete a user (admin only)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Campaigns</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/campaigns</code>
+            <div class="description">Get campaigns based on role permissions</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/campaigns/{campaign_id}</code>
+            <div class="description">Get a specific campaign</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/campaigns</code>
+            <div class="description">Create a new campaign (admin only)</div>
+            <pre><code>{
+  "name": "New Campaign",
+  "billing_rate_per_hour": 30.00
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/campaigns/{campaign_id}</code>
+            <div class="description">Update a campaign (admin only)</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <code>/api/campaigns/{campaign_id}</code>
+            <div class="description">Delete a campaign (admin only)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Schedules</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/schedules</code>
+            <div class="description">Get schedules based on role permissions</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/schedules/{schedule_id}</code>
+            <div class="description">Get a specific schedule</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/schedules</code>
+            <div class="description">Create a new schedule (admin only)</div>
+            <pre><code>{
+  "campaign_id": "550e8400-e29b-41d4-a716-446655440001",
+  "name": "Standard 9-6 Shift",
+  "work_start_time": "09:00:00",
+  "work_end_time": "18:00:00",
+  "lunch_duration_minutes": 60,
+  "short_break_duration_minutes": 15
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/schedules/{schedule_id}</code>
+            <div class="description">Update a schedule (admin only)</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <code>/api/schedules/{schedule_id}</code>
+            <div class="description">Delete a schedule (admin only)</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Timesheets</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/timesheets</code>
+            <div class="description">Get timesheet entries based on role permissions</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/timesheets/{timesheet_id}</code>
+            <div class="description">Get a specific timesheet entry</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <code>/api/timesheets</code>
+            <div class="description">Create a new timesheet entry</div>
+            <pre><code>{
+  "date": "2025-06-05",
+  "time_in": "2025-06-05T09:00:00Z",
+  "time_out": "2025-06-05T18:00:00Z",
+  "lunch_start": "2025-06-05T12:00:00Z",
+  "lunch_end": "2025-06-05T13:00:00Z"
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/timesheets/{timesheet_id}</code>
+            <div class="description">Update a timesheet entry</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/timesheets/{timesheet_id}/submit</code>
+            <div class="description">Submit a timesheet entry for approval</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/timesheets/{timesheet_id}/approve</code>
+            <div class="description">Approve a timesheet entry (campaign lead or admin only)</div>
+            <pre><code>{
+  "comments": "Approved - all times look correct"
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <code>/api/timesheets/{timesheet_id}/reject</code>
+            <div class="description">Reject a timesheet entry (campaign lead or admin only)</div>
+            <pre><code>{
+  "comments": "Rejected - lunch break is missing"
+}</code></pre>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <code>/api/timesheets/{timesheet_id}</code>
+            <div class="description">Delete a timesheet entry</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Reports</h2>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/reports/campaign-summary</code>
+            <div class="description">Generate a campaign summary report</div>
+            <p>Query parameters: <code>campaign_id</code>, <code>month</code> (YYYY-MM)</p>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/reports/organization-summary</code>
+            <div class="description">Generate an organization-wide summary report (admin only)</div>
+            <p>Query parameters: <code>month</code> (YYYY-MM)</p>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/reports/user-timesheet</code>
+            <div class="description">Generate a timesheet report for a specific user</div>
+            <p>Query parameters: <code>user_id</code>, <code>month</code> (YYYY-MM)</p>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/reports/export-csv</code>
+            <div class="description">Export report data as CSV</div>
+        </div>
+        
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <code>/api/reports/export-pdf</code>
+            <div class="description">Export report data as PDF</div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Inv_TimeSheetMgmt API &copy; 2025</p>
+    </footer>
+</body>
+</html>
+
