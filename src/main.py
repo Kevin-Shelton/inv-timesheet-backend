@@ -1,22 +1,8 @@
 import os
 import sys
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from dotenv import load_dotenv  # Add this line!
-
-# Now you can call load_dotenv()
-load_dotenv()
-
-app = Flask(__name__)
-CORS(app, origins=[
-    "https://inv-timesheet-frontend.vercel.app",
-    "http://localhost:5173",
-    "http://localhost:3000"
-] )
-
-# Rest of your Flask app code...
-
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
@@ -33,16 +19,11 @@ from src.routes.reports import reports_bp
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 
 # Enable CORS - Allow frontend domain in production
-frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
-allowed_origins = [frontend_url, 'http://localhost:3000', 'http://localhost:5173']
-
-CORS(app, resources={
-    r"/api/*": {
-        "origins": allowed_origins,
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+CORS(app, origins=[
+    "https://inv-timesheet-frontend.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
+], supports_credentials=True)
 
 # Set secret key
 app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'dev-secret-key-replace-in-production')
