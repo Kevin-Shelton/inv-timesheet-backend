@@ -1,18 +1,18 @@
 import os
 import sys
-# DON'T CHANGE THIS !!!
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+python
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv  # Add this line!
 
-from flask import Flask
-from flask_cors import CORS  # Add this import
+# Now you can call load_dotenv()
+load_dotenv()
 
 app = Flask(__name__)
-
-# Add CORS configuration
 CORS(app, origins=[
-    "https://inv-timesheet-frontend.vercel.app",  # Your Vercel domain
-    "http://localhost:5173",  # For local development
-    "http://localhost:3000"   # Alternative local port
+    "https://inv-timesheet-frontend.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
 ] )
 
 # Rest of your Flask app code...
