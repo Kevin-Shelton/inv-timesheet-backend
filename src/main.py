@@ -3,9 +3,20 @@ import sys
 # DON'T CHANGE THIS !!!
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from flask import Flask, send_from_directory, jsonify
-from flask_cors import CORS
-from dotenv import load_dotenv
+from flask import Flask
+from flask_cors import CORS  # Add this import
+
+app = Flask(__name__)
+
+# Add CORS configuration
+CORS(app, origins=[
+    "https://inv-timesheet-frontend.vercel.app",  # Your Vercel domain
+    "http://localhost:5173",  # For local development
+    "http://localhost:3000"   # Alternative local port
+] )
+
+# Rest of your Flask app code...
+
 
 # Load environment variables
 load_dotenv()
