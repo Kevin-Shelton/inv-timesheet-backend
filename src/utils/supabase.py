@@ -1,5 +1,4 @@
 import os
-from supabase import create_client, Client
 
 # Get Supabase credentials from environment variables
 SUPABASE_URL = os.getenv('SUPABASE_URL')
@@ -10,7 +9,8 @@ supabase = None
 
 try:
     if SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY:
-        supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+        from supabase import create_client
+        supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
         print("✅ Supabase client initialized successfully")
     else:
         print("❌ Missing Supabase credentials:")
