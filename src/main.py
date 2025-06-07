@@ -53,6 +53,40 @@ def test_db():
             'message': f'Database error: {str(e)}'
         }), 500
 
+# Debug user endpoint to troubleshoot authentication
+@app.route('/api/debug-user')
+def debug_user():
+    try:
+        from src.utils.supabase import get_supabase_client
+        supabase = get_supabase_client()
+        
+        # Try to find the user
+        result = supabase.table('users').select('*').eq('email', 'admin@test.com').execute()
+        
+        if result.data:
+            user = result.data[0]
+            return jsonify({
+                'status': 'success',
+                'user_found': True,
+                'email': user.get('email'),
+                'role': user.get('role'),
+                'is_active': user.get('is_active'),
+                'has_password': bool(user.get('hashed_password')),
+                'password_length': len(user.get('hashed_password', '')),
+                'user_fields': list(user.keys())
+            })
+        else:
+            return jsonify({
+                'status': 'success',
+                'user_found': False,
+                'message': 'User not found'
+            })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Debug error: {str(e)}'
+        }), 500
+
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):
