@@ -36,6 +36,23 @@ app.register_blueprint(schedules_bp, url_prefix='/api/schedules')
 app.register_blueprint(timesheets_bp, url_prefix='/api/timesheets')
 app.register_blueprint(reports_bp, url_prefix='/api/reports')
 
+# Test database connection endpoint
+@app.route('/api/test-db')
+def test_db():
+    try:
+        from src.utils.supabase import supabase
+        result = supabase.table('users').select('email').limit(1).execute()
+        return jsonify({
+            'status': 'success',
+            'message': 'Database connected',
+            'user_count': len(result.data)
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Database error: {str(e)}'
+        }), 500
+
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):
