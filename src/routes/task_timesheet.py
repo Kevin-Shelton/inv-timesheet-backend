@@ -6,7 +6,7 @@ from src.utils.supabase import get_supabase_client
 # Create blueprint
 task_timesheet_bp = Blueprint('task_timesheet', __name__)
 
-# Utility functions
+# Utility_functions
 def get_supabase():
     """Get Supabase client"""
     return get_supabase_client()
