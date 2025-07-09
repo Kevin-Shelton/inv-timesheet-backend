@@ -14,6 +14,7 @@ from src.routes.campaigns import campaigns_bp
 from src.routes.schedules import schedules_bp
 from src.routes.timesheets import timesheets_bp
 from src.routes.reports import reports_bp
+from src.routes.task_timesheet import task_timesheet_bp
 
 # Create Flask app
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
@@ -35,6 +36,7 @@ app.register_blueprint(campaigns_bp, url_prefix='/api/campaigns')
 app.register_blueprint(schedules_bp, url_prefix='/api/schedules')
 app.register_blueprint(timesheets_bp, url_prefix='/api/timesheets')
 app.register_blueprint(reports_bp, url_prefix='/api/reports')
+app.register_blueprint(task_timesheet_bp, url_prefix='/api/task-timesheets')
 
 # Test database connection endpoint
 @app.route('/api/test-db')
@@ -127,7 +129,8 @@ def api_info():
             'campaigns': '/api/campaigns',
             'schedules': '/api/schedules',
             'timesheets': '/api/timesheets',
-            'reports': '/api/reports'
+            'reports': '/api/reports',
+            'task-timesheets': '/api/task-timesheets'
         }
     })
 
